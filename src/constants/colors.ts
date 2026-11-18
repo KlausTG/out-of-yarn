@@ -72,7 +72,7 @@ const light = {
     static: staticColors,
   },
   text: {
-    primary: dusty_olive[900],
+    primary: dusty_olive[950],
     secondary: dusty_olive[600],
     accent: pure_red[600],
     placeholder: dusty_olive[400],

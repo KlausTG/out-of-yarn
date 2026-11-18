@@ -37,24 +37,25 @@ const lineHeight = (fontSize: number, ratio: number) => Math.round(fontSize * ra
 export const typography = {
   display: {
     fontFamily: fontFamily.berkshireSwash,
-    fontSize: 24,
-    lineHeight: lineHeight(24, 1.25),
+    fontSize: 28,
+    lineHeight: lineHeight(28, 1.5),
+    letterSpacing: -0.5
   },
   header: {
     fontFamily: fontFamily.berkshireSwash,
-    fontSize: 20,
-    lineHeight: lineHeight(20, 1),
+    fontSize: 24,
+    lineHeight: lineHeight(24, 1.25),
   },
   /** Default text style, the most widely used. */
   body: {
     fontFamily: fontFamily.firaSans,
     fontSize: 12,
-    lineHeight: lineHeight(12, 1),
+    lineHeight: lineHeight(12, 1.2),
   },
   bodyStrong: {
     fontFamily: fontFamily.firaSansSemiBold,
     fontSize: 12,
-    lineHeight: lineHeight(12, 1),
+    lineHeight: lineHeight(12, 1.2),
   },
   /** `body` with a comfortable line height for running text. */
   bodyParagraph: {
@@ -65,19 +66,19 @@ export const typography = {
   footer: {
     fontFamily: fontFamily.firaSans,
     fontSize: 10,
-    lineHeight: lineHeight(10, 1),
+    lineHeight: lineHeight(10, 1.2),
   },
   footerStrong: {
     fontFamily: fontFamily.firaSansSemiBold,
     fontSize: 10,
-    lineHeight: lineHeight(10, 1),
+    lineHeight: lineHeight(10, 1.2),
   },
   /** Small uppercase label above headers and display text. */
   kicker: {
     fontFamily: fontFamily.firaSansCondensedSemiBold,
     fontSize: 12,
     lineHeight: lineHeight(12, 1),
-    letterSpacing: 1.5,
+    letterSpacing: 3,
     textTransform: 'uppercase',
   },
 } as const satisfies Record<string, TextStyle>;
