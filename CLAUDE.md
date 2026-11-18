@@ -24,7 +24,7 @@ No test runner is set up yet. Adding one means following Expo's "Unit Testing wi
 
 ## Architecture
 
-This is still mostly the `create-expo-app` default template. The app's own features ("out-of-yarn") haven't been built yet.
+This is still mostly the `create-expo-app` default template. This app ("out of yarn") is in a pre-production stage. We are working on building out the design system and scaffolding the navigation for the screens we already know we want.
 
 - **Routing**: Expo Router. The entry is `expo-router/entry` and routes live in `src/app/`. `src/app/_layout.tsx` is the root: it holds the splash screen (`preventAutoHideAsync` plus `AnimatedSplashOverlay`), the navigation `ThemeProvider`, and `AppTabs`.
 - **Platform-split files**: several modules have a `.web.tsx`/`.web.ts` sibling that Metro picks on web. For example, `app-tabs.tsx` uses `NativeTabs` from `expo-router/native-tabs`, while `app-tabs.web.tsx` builds a custom top tab bar with `expo-router/ui` (`Tabs`/`TabList`/`TabTrigger`). If you add, rename, or remove a tab, update **both** files. The same split applies to `animated-icon` and `use-color-scheme`.
