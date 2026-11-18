@@ -56,6 +56,11 @@ export type ColorScheme = {
     strong: PaletteColor;
     accent: PaletteColor;
   };
+  /**
+   * Android press ripple, keyed by the background it sits on.
+   * One tone darker than that background where the palette allows it.
+   */
+  ripple: Record<Exclude<keyof ColorScheme['background'], 'static'>, PaletteColor>;
 };
 
 const staticColors = {
@@ -95,6 +100,12 @@ const light = {
     strong: pure_red[300],
     accent: pure_red[600],
   },
+  ripple: {
+    default: pure_red[100],
+    muted: pure_red[200],
+    primary: pure_red[700],
+    inverted: pure_red[1000],
+  },
 } as const satisfies ColorScheme;
 
 const dark = {
@@ -128,6 +139,13 @@ const dark = {
     default: pure_red[900],
     strong: pure_red[800],
     accent: pure_red[500],
+  },
+  ripple: {
+    // `default` is already the darkest tone, so its ripple steps lighter instead.
+    default: pure_red[950],
+    muted: pure_red[1000],
+    primary: pure_red[600],
+    inverted: pure_red[100],
   },
 } as const satisfies ColorScheme;
 
