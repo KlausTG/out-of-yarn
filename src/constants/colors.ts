@@ -24,11 +24,6 @@ export type ColorScheme = {
     primary: PaletteColor;
     /** Opposite of default, e.g. tooltips. */
     inverted: PaletteColor;
-    /** Identical across schemes. */
-    static: {
-      white: PaletteColor;
-      black: PaletteColor;
-    };
   };
   text: {
     primary: PaletteColor;
@@ -38,8 +33,13 @@ export type ColorScheme = {
     hint: PaletteColor;
     disabled: PaletteColor;
     danger: PaletteColor;
-    /** Labels on `background.primary` / `background.inverted`. */
+    /** Labels on `background.inverted`. */
     inverted: PaletteColor;
+    /** Identical across schemes. */
+    static: {
+      white: PaletteColor;
+      black: PaletteColor;
+    };
   };
   icon: {
     default: PaletteColor;
@@ -48,8 +48,6 @@ export type ColorScheme = {
     inactive: PaletteColor;
     disabled: PaletteColor;
     subtle: PaletteColor;
-    /** Icons on `background.primary` / `background.inverted`. */
-    inverted: PaletteColor;
   };
   border: {
     default: PaletteColor;
@@ -66,7 +64,7 @@ export type ColorScheme = {
 const staticColors = {
   white: neutral.white,
   black: neutral.black,
-} as const satisfies ColorScheme['background']['static'];
+} as const satisfies ColorScheme['text']['static'];
 
 const light = {
   background: {
@@ -74,7 +72,6 @@ const light = {
     muted: pure_red[100],
     primary: pure_red[600],
     inverted: pure_red[950],
-    static: staticColors,
   },
   text: {
     primary: dusty_olive[950],
@@ -85,6 +82,7 @@ const light = {
     disabled: dusty_olive[400],
     danger: harvest_orange[700],
     inverted: neutral.white,
+    static: staticColors,
   },
   icon: {
     default: pure_red[600],
@@ -93,7 +91,6 @@ const light = {
     inactive: pure_red[400],
     disabled: pure_red[400],
     subtle: pure_red[400],
-    inverted: neutral.white,
   },
   border: {
     default: pure_red[200],
@@ -114,7 +111,6 @@ const dark = {
     muted: pure_red[950],
     primary: pure_red[500],
     inverted: pure_red[50],
-    static: staticColors,
   },
   text: {
     primary: dusty_olive[50],
@@ -125,6 +121,7 @@ const dark = {
     disabled: dusty_olive[600],
     danger: harvest_orange[400],
     inverted: dusty_olive[1000],
+    static: staticColors,
   },
   icon: {
     default: pure_red[400],
@@ -133,7 +130,6 @@ const dark = {
     inactive: pure_red[700],
     disabled: pure_red[700],
     subtle: pure_red[700],
-    inverted: dusty_olive[1000],
   },
   border: {
     default: pure_red[900],
