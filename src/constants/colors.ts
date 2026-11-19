@@ -77,7 +77,7 @@ const light = {
     accent: pure_red[600],
     placeholder: dusty_olive[400],
     hint: dusty_olive[400],
-    disabled: dusty_olive[400],
+    disabled: pure_red[400],
     danger: harvest_orange[700],
     inverted: neutral.white,
     staticWhite: neutral.white,
