@@ -135,19 +135,31 @@ export function Button({
   const glyphSize = isIconOnly ? iconSize.lg : iconSize.md;
   // The spinner takes over an existing icon's slot so the label doesn't move.
   // With no icon to replace, it takes the label's place instead.
-  const spinnerSlot = leadingIcon ? "leading" : trailingIcon ? "trailing" : "label";
+  const spinnerSlot = leadingIcon
+    ? "leading"
+    : trailingIcon
+      ? "trailing"
+      : "label";
   const hideLabel = loading && spinnerSlot === "label";
 
   // Icons are decorative: the label already says what the button does.
   const renderIcon = (name: SymbolName) => (
-    <SymbolView name={name} size={glyphSize} tintColor={iconColor} aria-hidden />
+    <SymbolView
+      name={name}
+      size={glyphSize}
+      tintColor={iconColor}
+      aria-hidden
+    />
   );
 
   // Fixed box the size of the icon it replaces, so swapping never changes layout.
   // iOS only has preset spinner sizes ('small' is 20pt), so it is scaled to fit;
   // Android takes a numeric size directly.
   const renderSpinner = () => (
-    <View style={[styles.glyphBox, { width: glyphSize, height: glyphSize }]} aria-hidden>
+    <View
+      style={[styles.glyphBox, { width: glyphSize, height: glyphSize }]}
+      aria-hidden
+    >
       <ActivityIndicator
         color={iconColor}
         size={Platform.OS === "android" ? glyphSize : "small"}
