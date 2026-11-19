@@ -1,9 +1,11 @@
 import { SymbolView, type SymbolViewProps } from "expo-symbols";
 import {
+  ActivityIndicator,
   Platform,
   Pressable,
   StyleSheet,
   Text,
+  View,
   type PressableProps,
   type StyleProp,
   type ViewStyle,
@@ -45,6 +47,9 @@ const disabledColors = {
 
 const hitSlop = spacing.md;
 
+/** Rendered size of iOS's `size="small"` ActivityIndicator, used to scale it to icon size. */
+const iosSmallSpinnerSize = 20;
+
 type SymbolName = SymbolViewProps["name"];
 
 /**
@@ -68,6 +73,11 @@ type BaseProps = Omit<
    */
   accessibilityRole?: "button" | "link";
   variant?: ButtonVariant;
+  /**
+   * Shows a spinner in the icon slot (leading, else trailing). With no icon, the spinner
+   * replaces the label, which stays invisible underneath to hold the width. Blocks presses. Keeps the variant's colors; only `disabled` greys the button out.
+   */
+  loading?: boolean;
   /** Layout overrides only (margins, flex, alignSelf). Merged last. */
   style?: StyleProp<ViewStyle>;
 };
@@ -104,6 +114,7 @@ export function Button({
   leadingIcon,
   trailingIcon,
   disabled,
+  loading = false,
   style,
   accessibilityLabel,
   accessibilityRole = "button",
@@ -121,16 +132,38 @@ export function Button({
   // No-fill variants ripple against the screen background they sit on.
   const rippleColor = theme.ripple[variantTokens.background ?? "default"];
   const iconColor = theme.icon[tokens.icon];
+  const glyphSize = isIconOnly ? iconSize.lg : iconSize.md;
+  // The spinner takes over an existing icon's slot so the label doesn't move.
+  // With no icon to replace, it takes the label's place instead.
+  const spinnerSlot = leadingIcon ? "leading" : trailingIcon ? "trailing" : "label";
+  const hideLabel = loading && spinnerSlot === "label";
 
   // Icons are decorative: the label already says what the button does.
   const renderIcon = (name: SymbolName) => (
-    <SymbolView
-      name={name}
-      size={isIconOnly ? iconSize.lg : iconSize.md}
-      tintColor={iconColor}
-      aria-hidden
-    />
+    <SymbolView name={name} size={glyphSize} tintColor={iconColor} aria-hidden />
   );
+
+  // Fixed box the size of the icon it replaces, so swapping never changes layout.
+  // iOS only has preset spinner sizes ('small' is 20pt), so it is scaled to fit;
+  // Android takes a numeric size directly.
+  const renderSpinner = () => (
+    <View style={[styles.glyphBox, { width: glyphSize, height: glyphSize }]} aria-hidden>
+      <ActivityIndicator
+        color={iconColor}
+        size={Platform.OS === "android" ? glyphSize : "small"}
+        style={
+          Platform.OS === "ios" && {
+            transform: [{ scale: glyphSize / iosSmallSpinnerSize }],
+          }
+        }
+      />
+    </View>
+  );
+
+  const renderSlot = (slot: "leading" | "trailing", icon?: SymbolName) => {
+    if (loading && spinnerSlot === slot) return renderSpinner();
+    return icon ? renderIcon(icon) : null;
+  };
 
   return (
     <Pressable
@@ -141,8 +174,11 @@ export function Button({
       // over accessibilityLabel and it would bypass the icon-only label requirement.
       aria-label={undefined}
       // Always a boolean: Pressable then forces accessibilityState.disabled to match,
-      // overriding any caller `accessibilityState` or `aria-disabled`.
-      disabled={!!disabled}
+      // overriding any caller `accessibilityState` or `aria-disabled`. Loading blocks presses too.
+      disabled={!!disabled || loading}
+      // Placed after `...rest` so it can't be overridden; Pressable prefers it over
+      // accessibilityState.busy, so a caller's `accessibilityState` keeps its other keys.
+      aria-busy={loading}
       hitSlop={hitSlop}
       android_ripple={{ color: rippleColor, foreground: true }}
       style={({ pressed }) => [
@@ -154,13 +190,23 @@ export function Button({
         style,
       ]}
     >
-      {leadingIcon && renderIcon(leadingIcon)}
+      {renderSlot("leading", leadingIcon)}
       {!isIconOnly && (
-        <Text style={[styles.label, { color: theme.text[tokens.label] }]}>
+        // Hidden rather than removed while loading, so it keeps holding the button's width.
+        <Text
+          style={[
+            styles.label,
+            { color: theme.text[tokens.label] },
+            hideLabel && styles.hidden,
+          ]}
+        >
           {label}
         </Text>
       )}
-      {trailingIcon && renderIcon(trailingIcon)}
+      {hideLabel && (
+        <View style={styles.spinnerOverlay}>{renderSpinner()}</View>
+      )}
+      {renderSlot("trailing", trailingIcon)}
     </Pressable>
   );
 }
@@ -194,6 +240,18 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.7,
+  },
+  glyphBox: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  hidden: {
+    opacity: 0,
+  },
+  spinnerOverlay: {
+    ...StyleSheet.absoluteFill,
+    alignItems: "center",
+    justifyContent: "center",
   },
   label: {
     ...typography.bodyStrong,
