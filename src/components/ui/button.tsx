@@ -30,7 +30,7 @@ type VariantColors = {
 };
 
 const variantColors = {
-  primary: { background: 'primary', label: 'inverted', icon: 'inverted' },
+  primary: { background: 'primary', label: 'staticWhite', icon: 'staticWhite' },
   secondary: { background: 'muted', label: 'primary', icon: 'default' },
   ghost: { background: null, label: 'primary', icon: 'default' },
   link: { background: null, label: 'accent', icon: 'default' },
@@ -43,10 +43,26 @@ const disabledColors = {
   icon: 'disabled',
 } as const satisfies VariantColors;
 
-const hitSlop = spacing.ms;
+const hitSlop = spacing.md;
 
 export type ButtonProps = Omit<PressableProps, 'style' | 'children'> & {
+  /** Visible text. Also what screen readers announce unless `accessibilityLabel` is set. */
   label: string;
+  /**
+   * Screen reader name when the visible label isn't enough on its own,
+   * e.g. "Delete Merino skein" for a button that just reads "Delete".
+   */
+  accessibilityLabel?: string;
+  /**
+   * Screen reader description of the result, read after the label.
+   * Start with a verb and skip "Tap to", e.g. "Opens the pattern in a new screen".
+   */
+  accessibilityHint?: string;
+  /**
+   * Defaults to `button`. Pass `link` when pressing navigates somewhere,
+   * so screen readers announce it the way it behaves rather than how it looks.
+   */
+  accessibilityRole?: 'button' | 'link';
   variant?: ButtonVariant;
   /** SF Symbol / Material symbol shown before the label. */
   leadingIcon?: SymbolViewProps['name'];
@@ -63,6 +79,10 @@ export function Button({
   trailingIcon,
   disabled,
   style,
+  accessibilityLabel,
+  accessibilityHint,
+  accessibilityRole = 'button',
+  accessibilityState,
   ...rest
 }: ButtonProps) {
   const theme = useTheme();
@@ -75,14 +95,18 @@ export function Button({
   const rippleColor = theme.ripple[variantTokens.background ?? 'default'];
   const iconColor = theme.icon[tokens.icon];
 
+  // Icons are decorative: the label already says what the button does.
   const renderIcon = (name: SymbolViewProps['name']) => (
-    <SymbolView name={name} size={iconSize.md} tintColor={iconColor} />
+    <SymbolView name={name} size={iconSize.md} tintColor={iconColor} aria-hidden />
   );
 
   return (
     <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ disabled: !!disabled }}
+      {...rest}
+      accessibilityRole={accessibilityRole}
+      accessibilityLabel={accessibilityLabel ?? label}
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{ ...accessibilityState, disabled: !!disabled }}
       disabled={disabled}
       hitSlop={hitSlop}
       android_ripple={{ color: rippleColor }}
@@ -92,8 +116,7 @@ export function Button({
         { backgroundColor },
         pressed && Platform.OS !== 'android' && styles.pressed,
         style,
-      ]}
-      {...rest}>
+      ]}>
       {leadingIcon && renderIcon(leadingIcon)}
       <Text style={[styles.label, { color: theme.text[tokens.label] }]}>{label}</Text>
       {trailingIcon && renderIcon(trailingIcon)}
