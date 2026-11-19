@@ -31,8 +31,8 @@ type VariantColors = {
 
 const variantColors = {
   primary: { background: "primary", label: "staticWhite", icon: "staticWhite" },
-  secondary: { background: "muted", label: "primary", icon: "default" },
-  ghost: { background: null, label: "primary", icon: "default" },
+  secondary: { background: "muted", label: "accent", icon: "default" },
+  ghost: { background: null, label: "accent", icon: "default" },
   link: { background: null, label: "accent", icon: "default" },
 } as const satisfies Record<ButtonVariant, VariantColors>;
 
