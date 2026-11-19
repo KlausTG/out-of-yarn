@@ -109,7 +109,7 @@ export function Button({
       accessibilityState={{ ...accessibilityState, disabled: !!disabled }}
       disabled={disabled}
       hitSlop={hitSlop}
-      android_ripple={{ color: rippleColor }}
+      android_ripple={{ color: rippleColor, foreground: true }}
       style={({ pressed }) => [
         styles.base,
         isLink ? styles.link : styles.padded,
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   padded: {
-    minHeight: 40,
+    minHeight: 44,
     minWidth: 72,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
