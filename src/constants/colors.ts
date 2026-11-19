@@ -99,8 +99,8 @@ const light = {
     accent: pure_red[600],
   },
   ripple: {
-    default: pure_red[100],
-    muted: pure_red[200],
+    default: pure_red[200],
+    muted: pure_red[300],
     primary: pure_red[700],
     inverted: pure_red[1000],
   },
@@ -110,7 +110,7 @@ const dark = {
   background: {
     default: pure_red[1000],
     muted: pure_red[950],
-    primary: pure_red[500],
+    primary: pure_red[600],
     inverted: pure_red[50],
   },
   text: {
@@ -142,9 +142,9 @@ const dark = {
   },
   ripple: {
     // `default` is already the darkest tone, so its ripple steps lighter instead.
-    default: pure_red[950],
-    muted: pure_red[1000],
-    primary: pure_red[600],
+    default: pure_red[900],
+    muted: pure_red[900],
+    primary: pure_red[700],
     inverted: pure_red[100],
   },
 } as const satisfies ColorScheme;
