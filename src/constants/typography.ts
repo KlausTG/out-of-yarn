@@ -49,19 +49,19 @@ export const typography = {
   /** Default text style, the most widely used. */
   body: {
     fontFamily: fontFamily.firaSans,
-    fontSize: 12,
-    lineHeight: lineHeight(12, 1.2),
+    fontSize: 14,
+    lineHeight: lineHeight(14, 1.2),
   },
   bodyStrong: {
     fontFamily: fontFamily.firaSansSemiBold,
-    fontSize: 12,
-    lineHeight: lineHeight(12, 1.2),
+    fontSize: 14,
+    lineHeight: lineHeight(14, 1.2),
   },
   /** `body` with a comfortable line height for running text. */
   bodyParagraph: {
     fontFamily: fontFamily.firaSans,
-    fontSize: 12,
-    lineHeight: lineHeight(12, 1.5),
+    fontSize: 14,
+    lineHeight: lineHeight(14, 1.5),
   },
   footer: {
     fontFamily: fontFamily.firaSans,
