@@ -37,8 +37,8 @@ const lineHeight = (fontSize: number, ratio: number) => Math.round(fontSize * ra
 export const typography = {
   display: {
     fontFamily: fontFamily.berkshireSwash,
-    fontSize: 28,
-    lineHeight: lineHeight(28, 1.5),
+    fontSize: 32,
+    lineHeight: lineHeight(32, 1.25),
     letterSpacing: -0.5
   },
   header: {
