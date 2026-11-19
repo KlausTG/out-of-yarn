@@ -35,11 +35,10 @@ export type ColorScheme = {
     danger: PaletteColor;
     /** Labels on `background.inverted`. */
     inverted: PaletteColor;
-    /** Identical across schemes. */
-    static: {
-      white: PaletteColor;
-      black: PaletteColor;
-    };
+    /** White in both schemes, e.g. labels on `background.primary`. */
+    staticWhite: PaletteColor;
+    /** Black in both schemes. */
+    staticBlack: PaletteColor;
   };
   icon: {
     default: PaletteColor;
@@ -48,6 +47,10 @@ export type ColorScheme = {
     inactive: PaletteColor;
     disabled: PaletteColor;
     subtle: PaletteColor;
+    /** White in both schemes, e.g. icons on `background.primary`. */
+    staticWhite: PaletteColor;
+    /** Black in both schemes. */
+    staticBlack: PaletteColor;
   };
   border: {
     default: PaletteColor;
@@ -58,13 +61,8 @@ export type ColorScheme = {
    * Android press ripple, keyed by the background it sits on.
    * One tone darker than that background where the palette allows it.
    */
-  ripple: Record<Exclude<keyof ColorScheme['background'], 'static'>, PaletteColor>;
+  ripple: Record<keyof ColorScheme['background'], PaletteColor>;
 };
-
-const staticColors = {
-  white: neutral.white,
-  black: neutral.black,
-} as const satisfies ColorScheme['text']['static'];
 
 const light = {
   background: {
@@ -82,7 +80,8 @@ const light = {
     disabled: dusty_olive[400],
     danger: harvest_orange[700],
     inverted: neutral.white,
-    static: staticColors,
+    staticWhite: neutral.white,
+    staticBlack: neutral.black,
   },
   icon: {
     default: pure_red[600],
@@ -91,6 +90,8 @@ const light = {
     inactive: pure_red[400],
     disabled: pure_red[400],
     subtle: pure_red[400],
+    staticWhite: neutral.white,
+    staticBlack: neutral.black,
   },
   border: {
     default: pure_red[200],
@@ -121,7 +122,8 @@ const dark = {
     disabled: dusty_olive[600],
     danger: harvest_orange[400],
     inverted: dusty_olive[1000],
-    static: staticColors,
+    staticWhite: neutral.white,
+    staticBlack: neutral.black,
   },
   icon: {
     default: pure_red[400],
@@ -130,6 +132,8 @@ const dark = {
     inactive: pure_red[700],
     disabled: pure_red[700],
     subtle: pure_red[700],
+    staticWhite: neutral.white,
+    staticBlack: neutral.black,
   },
   border: {
     default: pure_red[900],
@@ -149,8 +153,7 @@ export const colors = { light, dark } as const satisfies Record<'light' | 'dark'
 
 export type ColorSchemeName = keyof typeof colors;
 
-/** Background tokens usable as a surface fill (`static` is a group, not a color). */
-export type BackgroundColorToken = Exclude<keyof ColorScheme['background'], 'static'>;
+export type BackgroundColorToken = keyof ColorScheme['background'];
 export type TextColorToken = keyof ColorScheme['text'];
 export type IconColorToken = keyof ColorScheme['icon'];
 export type BorderColorToken = keyof ColorScheme['border'];
