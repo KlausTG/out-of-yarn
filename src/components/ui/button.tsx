@@ -47,15 +47,21 @@ const hitSlop = spacing.md;
 
 type SymbolName = SymbolViewProps["name"];
 
+/**
+ * Everything else, including `accessibilityHint` and `accessibilityState`, passes straight
+ * through to Pressable. The `aria-label` and `role` aliases are removed so there is exactly
+ * one way to set the name and role; Pressable lets them silently win over the props below.
+ * (`aria-label` is also cleared at runtime, since TS doesn't check hyphenated JSX attributes.)
+ */
 type BaseProps = Omit<
   PressableProps,
-  "style" | "children" | "accessibilityLabel"
+  | "style"
+  | "children"
+  | "accessibilityLabel"
+  | "accessibilityRole"
+  | "aria-label"
+  | "role"
 > & {
-  /**
-   * Screen reader description of the result, read after the label.
-   * Start with a verb and skip "Tap to", e.g. "Opens the pattern in a new screen".
-   */
-  accessibilityHint?: string;
   /**
    * Defaults to `button`. Pass `link` when pressing navigates somewhere,
    * so screen readers announce it the way it behaves rather than how it looks.
@@ -100,9 +106,7 @@ export function Button({
   disabled,
   style,
   accessibilityLabel,
-  accessibilityHint,
   accessibilityRole = "button",
-  accessibilityState,
   ...rest
 }: ButtonProps) {
   const theme = useTheme();
@@ -133,9 +137,12 @@ export function Button({
       {...rest}
       accessibilityRole={accessibilityRole}
       accessibilityLabel={accessibilityLabel ?? label}
-      accessibilityHint={accessibilityHint}
-      accessibilityState={{ ...accessibilityState, disabled: !!disabled }}
-      disabled={disabled}
+      // TS can't block hyphenated JSX attributes, so clear it here: Pressable prefers it
+      // over accessibilityLabel and it would bypass the icon-only label requirement.
+      aria-label={undefined}
+      // Always a boolean: Pressable then forces accessibilityState.disabled to match,
+      // overriding any caller `accessibilityState` or `aria-disabled`.
+      disabled={!!disabled}
       hitSlop={hitSlop}
       android_ripple={{ color: rippleColor, foreground: true }}
       style={({ pressed }) => [
